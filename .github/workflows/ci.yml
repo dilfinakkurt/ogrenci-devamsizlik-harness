@@ -1,0 +1,27 @@
+name: Testler ve Dogrulama (CI)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Minitest ve bin/kontrol Dogrulamasi
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Repoyu Klonla
+      uses: actions/checkout@v4
+
+    - name: Ruby 3.4 Kurulumu
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+
+    - name: Calistirma Izinlerini Ayarla
+      run: chmod +x bin/kontrol
+
+    - name: bin/kontrol Kancasini Calistir
+      run: ./bin/kontrol

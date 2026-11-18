@@ -3,6 +3,8 @@
 > **"Sihir senin, dizgin harness'ın. Ajan = Model + Harness."**  
 > Samsun Üniversitesi · Yazılım Mühendisliği Bölümü · YZM379 İleri Ruby ve Harness Dersi Ödevi
 
+[![Testler ve Dogrulama (CI)](https://github.com/dilfinakkurt/ogrenci-devamsizlik-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/dilfinakkurt/ogrenci-devamsizlik-harness/actions/workflows/ci.yml)
+
 ---
 
 ## 1. Proje Başlığı ve Tanımı
