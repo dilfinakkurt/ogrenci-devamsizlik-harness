@@ -1,0 +1,13 @@
+{
+  "kosu": "B",
+  "tur_sayisi": 43,
+  "girdi_tokeni": 119449,
+  "cikti_tokeni": 12181,
+  "onbellek_okuma_tokeni": 1203676,
+  "sure_saniye": 435.0,
+  "baslangic": "2026-11-18T17:49:44Z",
+  "bitis": "2026-11-18T17:56:59Z",
+  "model": "gemini-3.8-flash-tiered",
+  "test_sonucu": "17 runs, 55 assertions, 0 failures, 0 errors, 0 skips",
+  "basari_durumu": "TAM BAŞARILI (17/17 test yeşil, bin/kontrol başarılı)"
+}

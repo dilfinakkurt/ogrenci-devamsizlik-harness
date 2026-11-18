@@ -1,0 +1,66 @@
+﻿==================================================
+      ÖĞRENCİ DEVAMSIZLIK KONTROL SİSTEMİ         
+         (Devamsızlık Sınırı: %30)         
+==================================================
+--------------------------------------------------
+Öğrenci No        : 101
+Ad Soyad          : Ahmet Yılmaz
+Toplam Ders Saati : 100
+Devamsızlık Saati : 10
+Devamsızlık Oranı : %10.0
+Risk Durumu       : HAYIR (Güvenli Bölge)
+Devamsızlık Analizi: GÜVENLİ (Devamsızlık oranı kabul edilebilir düzeyde)
+Not Ortalaması    : 85.0
+Sınıfı Geçti mi?  : GEÇTİ
+--------------------------------------------------
+--------------------------------------------------
+Öğrenci No        : 102
+Ad Soyad          : Ayşe Kaya
+Toplam Ders Saati : 100
+Devamsızlık Saati : 22
+Devamsızlık Oranı : %22.0
+Risk Durumu       : EVET (Riskli - Kritik Eşik Aşıldı)
+Devamsızlık Analizi: RİSKLİ / UYARI (Devamsızlık oranı sınıra yaklaşıyor)
+Not Ortalaması    : 75.0
+Sınıfı Geçti mi?  : GEÇTİ
+--------------------------------------------------
+--------------------------------------------------
+Öğrenci No        : 103
+Ad Soyad          : Mehmet Demir
+Toplam Ders Saati : 100
+Devamsızlık Saati : 29
+Devamsızlık Oranı : %29.0
+Risk Durumu       : EVET (Riskli - Kritik Eşik Aşıldı)
+Devamsızlık Analizi: RİSKLİ / UYARI (Devamsızlık oranı sınıra yaklaşıyor)
+Not Ortalaması    : 65.0
+Sınıfı Geçti mi?  : GEÇTİ
+--------------------------------------------------
+--------------------------------------------------
+Öğrenci No        : 104
+Ad Soyad          : Zeynep Çelik
+Toplam Ders Saati : 100
+Devamsızlık Saati : 35
+Devamsızlık Oranı : %35.0
+Risk Durumu       : LİMİT AŞILDI (Devamsızlıktan Kaldı)
+Devamsızlık Analizi: KALDI (Devamsızlık sınırı %30 aşıldı)
+Not Ortalaması    : 92.0
+Sınıfı Geçti mi?  : KALDI
+--------------------------------------------------
+--------------------------------------------------
+Öğrenci No        : 105
+Ad Soyad          : Can Aksoy
+Toplam Ders Saati : 100
+Devamsızlık Saati : 15
+Devamsızlık Oranı : %15.0
+Risk Durumu       : HAYIR (Güvenli Bölge)
+Devamsızlık Analizi: GÜVENLİ (Devamsızlık oranı kabul edilebilir düzeyde)
+Not Ortalaması    : 40.0
+Sınıfı Geçti mi?  : KALDI
+--------------------------------------------------
+GENEL İSTATİSTİK ÖZETİ:
+  Toplam Öğrenci Sayısı        : 5
+  Sınıfı Geçen Öğrenci Sayısı  : 3
+  Sınıfta Kalan Öğrenci Sayısı : 2
+  Devamsızlıktan Kalanlar      : 1
+  Risk Altındaki Öğrenciler    : 2
+==================================================

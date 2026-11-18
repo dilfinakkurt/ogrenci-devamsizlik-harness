@@ -1,0 +1,18 @@
+# RATCHET (MANDAL) GÜNLÜĞÜ
+
+"Aynı hata ikinci kez olursa harness'ın hatasıdır, ajanın değil." (Ders Slaytı 12)
+
+Aşağıdaki tablo, A koşusunda (rehbersiz ham koşu) ajanın yaptığı **gerçek hataları** ve bu hataların tekrarlanmasını önlemek amacıyla eklenen **kalıcı kuralları (AGENTS.md)** ve **sensörleri (Minitest)** belgelemektedir. Ayrıca ödev kısıtları doğrultusunda önleyici (preventive) olarak eklenen kurallar da açıkça belirtilmiştir.
+
+| Tarih | Ajanın Gerçek Hatası | Kalıcı Kural / Test | Katman | Koşu | B Koşusunda Tekrar Etti mi? |
+|---|---|---|---|---|---|
+| 2026-11-18 | Devamsızlık sınırında `> 30.0` kullandı; tam 3 sınır değerinde `>= 3` kuralını ıskalayarak öğrenciyi riskli saymadı. | `AGENTS.md` satırı: *Devamsızlık tam 3 ise 'riskli' sayılır (>= 3)* + `test_devamsizlik_tam_3_ise_riskli_olmali` | Her İkisi (Rehber + Sensör) | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | `define_method` yerine klasik `def` kullandı; `aktif?`, `donduruldu?`, `mezun?` durum sorguları tanımlanmadı. | `AGENTS.md` satırı: *Durum sorguları define_method ile üretilmeli* + `test_durum_sorgulari` & `test_respond_to_metotlarin_gercekligini_dogrular` | Her İkisi (Rehber + Sensör) | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | Ayrı bir servis kural motoru (`DevamsizlikKontrol`) ve Hash/lambda yapısı yerine monolitik `DevamsizlikTakipSistemi` sınıfı uydurdu. | `AGENTS.md` satırı: *DevamsizlikKontrol açık sınıfı ve KURALLAR Hash/lambda yapısı* + `test_devamsizlik_*` | Her İkisi (Rehber + Sensör) | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | Özgün kural olan `burs_kesilir` (devamsızlık >= 5) kuralını ve çoklu kural listeleme mantığını hiç uygulamadı. | `AGENTS.md` satırı: *Burs kesilme sınırı >= 5* + `test_devamsizlik_5_ise_burs_kesilir` | Her İkisi (Rehber + Sensör) | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | Sınır ve tip doğrulaması yapmadı; negatif veya 10'dan büyük değerleri kontrolsüz kabul edebilen gevşek Float yapı kurdu. | `AGENTS.md` sözleşmesi (0..10 Integer, sembol durumlar) + `test_negatif_devamsizlik_hata_firlatir`, `test_ondan_fazla_devamsizlik_hata_firlatir`, `test_yanlis_veri_turleri_hata_firlatir` | Her İkisi (Rehber + Sensör) | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | Hiçbir birim testi (Minitest) yazmadı; doğrulamayı yalnızca konsola `puts` basarak yaptı. | `test/ogrenci_test.rb` + `bin/kontrol` otomatik doğrulama kancası | Sensör | A Koşusu | Hayır (Engellendi) |
+| 2026-11-18 | *Önleyici Kural:* Standart sınıflara monkey patch yapma eğilimi (ders slaytı örnek 2 & kısa sınav 2 soru 5). | `AGENTS.md` yasağı: *Monkey patch yasak, açık servis/yardımcı sınıf kullan* | Rehber | Önleyici | Tekrar etmedi |
+| 2026-11-18 | *Önleyici Kural:* Eksik metotları yakalamak için `method_missing` kullanılması ve `respond_to?` tutarsızlığı. | `AGENTS.md` yasağı: *method_missing ve respond_to_missing? yasak* + `test_bilinmeyen_metot_nomethoderror_verir` | Her İkisi (Rehber + Sensör) | Önleyici | Tekrar etmedi |
+| 2026-11-18 | *Önleyici Kural:* Mezun veya kaydı dondurulmuş öğrencilerin yoklama kurallarına tabi tutulması riski. | `AGENTS.md`: *Yalnızca aktif öğrenciler devamsızlık değerlendirmesine tabi tutulur* + `test_mezun_ve_dondurulan_ogrenciler_kurallara_tabi_degildir` | Her İkisi (Rehber + Sensör) | Önleyici | Tekrar etmedi |
+| 2026-11-18 | Windows konsolunda varsayılan OEM 857 kod sayfasında `DİLFİN` kullanıcı adı `D?LF?N` olarak çözülüp `require_relative` LoadError verdi. | `test/ogrenci_test.rb` içinde `rescue LoadError` ile yerel göreli `require` fallback'i eklendi; `bin/kontrol.bat` içine `chcp 65001` kancası eklendi. | Sensör & Kanca | Doğrulama Aşaması | Hayır (Kalıcı Çözüldü) |

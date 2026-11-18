@@ -1,0 +1,19 @@
+{
+  "kosu": "A",
+  "tur_sayisi": 7,
+  "girdi_tokeni": 30138,
+  "cikti_tokeni": 6637,
+  "onbellek_okuma_tokeni": 83546,
+  "sure_saniye": 80.0,
+  "baslangic": "2026-11-18T17:43:35Z",
+  "bitis": "2026-11-18T17:44:55Z",
+  "model": "gemini-3.8-flash-tiered",
+  "hatalar": [
+    "Sınır kontrolünde '> 30.0' kullandı, tam sınırda '>= 3' kuralını ihlal etti.",
+    "define_method kullanmadı, durum sorguları (aktif?, donduruldu?, mezun?) eklenmedi.",
+    "DevamsizlikKontrol sınıfı ve Hash/lambda kural yapısı oluşturulmadı.",
+    "burs_kesilir kuralı uygulanmadı.",
+    "Minitest testleri yazılmadı, sınır kontrolleri otomatik sınanmadı.",
+    "Tip ve aralık doğrulaması (0..10 Integer, sembol durumları) yapılmadı."
+  ]
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>YZM379 · Öğrenci Devamsızlık Kontrol Sistemi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased p-6 text-sm">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-700">
+      <div>
+        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+          🎓 Öğrenci Devamsızlık & Durum Kontrol Paneli
+        </h1>
+        <p class="text-slate-400 text-sm">
+          YZM379 İleri Ruby & Harness Kural Motoru Görsel Arayüzü
+        </p>
+      </div>
+      <span class="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-xs font-mono text-emerald-400">
+        Ruby 3.4 Kural Motoru
+      </span>
+    </div>
+
+    <!-- Simülatör Kartı -->
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 space-y-4 shadow-xl">
+      <div class="font-semibold text-white flex items-center justify-between">
+        <span>⚡ Canlı Öğrenci Değerlendirme Simülatörü</span>
+        <span class="text-slate-400 text-xs">Sınır değerleri (3, 4, 5) test edin</span>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+          <label class="block text-slate-300 mb-1 text-xs font-medium">Öğrenci Adı</label>
+          <input id="adInput" type="text" value="Dilfin" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500 text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1 text-xs font-medium">Öğrenci Durumu</label>
+          <select id="durumInput" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500 text-sm">
+            <option value="aktif">Aktif (:aktif)</option>
+            <option value="donduruldu">Donduruldu (:donduruldu)</option>
+            <option value="mezun">Mezun (:mezun)</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-slate-300 text-xs font-medium">Devamsızlık (0-10)</label>
+            <span id="sliderValue" class="font-bold text-indigo-400 text-sm">3 Gün</span>
+          </div>
+          <input id="devamsizlikInput" type="range" min="0" max="10" value="3" class="w-full accent-indigo-500" />
+        </div>
+
+        <div>
+          <button id="ekleBtn" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition shadow-md">
+            Listeye Ekle
+          </button>
+        </div>
+      </div>
+
+      <!-- Canlı Önizleme Çubuğu -->
+      <div class="p-4 rounded-lg bg-slate-900/80 border border-slate-700 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-slate-400 text-xs">Anlık Değerlendirme:</span>
+          <span id="onizlemeAd" class="font-bold text-white">Dilfin</span>
+          <span id="onizlemeDurum" class="px-2 py-0.5 rounded text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">Aktif</span>
+          <span id="onizlemeDevamsizlik" class="font-mono text-sm text-slate-200">3 Gün Devamsızlık</span>
+        </div>
+        <div id="onizlemeRozetler" class="flex items-center gap-2"></div>
+      </div>
+    </div>
+
+    <!-- Kural Referans Kartları -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+      <div class="p-3 rounded-lg bg-slate-800 border border-amber-500/30">
+        <div class="font-bold text-amber-400 mb-1">⚠️ :riskli (≥ 3)</div>
+        <div class="text-slate-300">Tam 3 devamsızlık riskli sayılır.</div>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-800 border border-red-500/30">
+        <div class="font-bold text-red-400 mb-1">⛔ :kaldi (≥ 4)</div>
+        <div class="text-slate-300">4 ve üzeri devamsızlıkta kalır.</div>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-800 border border-purple-500/30">
+        <div class="font-bold text-purple-400 mb-1">💸 :burs_kesilir (≥ 5)</div>
+        <div class="text-slate-300">5 ve üzeri devamsızlıkta burs kesilir.</div>
+      </div>
+      <div class="p-3 rounded-lg bg-slate-800 border border-emerald-500/30">
+        <div class="font-bold text-emerald-400 mb-1">🛡️ Muafiyet Kuralı</div>
+        <div class="text-slate-300">Donduruldu / Mezun kurallara tabi değildir.</div>
+      </div>
+    </div>
+
+    <!-- Öğrenci Listesi Tablosu -->
+    <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-xl">
+      <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+        <span class="font-bold text-white text-base">Kayıtlı Öğrenci Listesi</span>
+        <button id="sifirlaBtn" class="text-xs text-indigo-400 hover:text-indigo-300 underline font-medium">
+          Varsayılan Örnekleri Yükle
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-slate-900/60 text-slate-400 text-xs border-b border-slate-700">
+              <th class="p-3">Öğrenci Adı</th>
+              <th class="p-3">Durum Metodu</th>
+              <th class="p-3">Devamsızlık</th>
+              <th class="p-3">DevamsizlikKontrol.durum(ogr)</th>
+              <th class="p-3 text-right">İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="ogrenciTablosu" class="divide-y divide-slate-700"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function kuralHesapla(durum, devamsizlik) {
+      if (durum !== 'aktif') return [];
+      const kurallar = [];
+      if (devamsizlik >= 3) kurallar.push('riskli');
+      if (devamsizlik >= 4) kurallar.push('kaldi');
+      if (devamsizlik >= 5) kurallar.push('burs_kesilir');
+      return kurallar;
+    }
+
+    let ogrenciler = [
+      { id: 1, ad: "Ahmet Yılmaz", durum: "aktif", devamsizlik: 0 },
+      { id: 2, ad: "Ayşe Kaya", durum: "aktif", devamsizlik: 2 },
+      { id: 3, ad: "Mehmet Demir", durum: "aktif", devamsizlik: 3 },
+      { id: 4, ad: "Zeynep Çelik", durum: "aktif", devamsizlik: 4 },
+      { id: 5, ad: "Can Aksoy", durum: "aktif", devamsizlik: 5 },
+      { id: 6, ad: "Deniz Arda", durum: "aktif", devamsizlik: 8 },
+      { id: 7, ad: "Selin Öztürk", durum: "donduruldu", devamsizlik: 6 },
+      { id: 8, ad: "Emre Yıldız", durum: "mezun", devamsizlik: 7 }
+    ];
+
+    const adInput = document.getElementById('adInput');
+    const durumInput = document.getElementById('durumInput');
+    const devamsizlikInput = document.getElementById('devamsizlikInput');
+    const sliderValue = document.getElementById('sliderValue');
+    const ekleBtn = document.getElementById('ekleBtn');
+    const sifirlaBtn = document.getElementById('sifirlaBtn');
+    const ogrenciTablosu = document.getElementById('ogrenciTablosu');
+
+    function rozetHTML(kural) {
+      if (kural === 'riskli') {
+        return `<span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">:riskli</span>`;
+      } else if (kural === 'kaldi') {
+        return `<span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-red-500/20 text-red-300 border border-red-500/30">:kaldi</span>`;
+      } else if (kural === 'burs_kesilir') {
+        return `<span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">:burs_kesilir</span>`;
+      }
+      return '';
+    }
+
+    function guncelleOnizleme() {
+      const ad = adInput.value || 'İsimsiz';
+      const durum = durumInput.value;
+      const devamsizlik = parseInt(devamsizlikInput.value, 10);
+
+      sliderValue.textContent = `${devamsizlik} Gün`;
+      document.getElementById('onizlemeAd').textContent = ad;
+      document.getElementById('onizlemeDevamsizlik').textContent = `${devamsizlik} Gün Devamsızlık`;
+
+      const durumEl = document.getElementById('onizlemeDurum');
+      durumEl.textContent = durum === 'aktif' ? 'Aktif' : (durum === 'donduruldu' ? 'Donduruldu' : 'Mezun');
+      durumEl.className = `px-2 py-0.5 rounded text-xs ${
+        durum === 'aktif' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : 'bg-slate-700 text-slate-300'
+      }`;
+
+      const kurallar = kuralHesapla(durum, devamsizlik);
+      const rozetlerDiv = document.getElementById('onizlemeRozetler');
+      if (kurallar.length === 0) {
+        rozetlerDiv.innerHTML = `<span class="text-xs text-emerald-400 font-semibold">✓ [ ] (Kural Uygulanmadı / Temiz)</span>`;
+      } else {
+        rozetlerDiv.innerHTML = kurallar.map(rozetHTML).join(' ');
+      }
+    }
+
+    function renderTablo() {
+      ogrenciTablosu.innerHTML = '';
+      ogrenciler.forEach(ogr => {
+        const kurallar = kuralHesapla(ogr.durum, ogr.devamsizlik);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-700/40 transition';
+
+        let durumPredicate = '';
+        if (ogr.durum === 'aktif') durumPredicate = '<span class="font-mono text-emerald-400 text-xs">aktif? => true</span>';
+        else if (ogr.durum === 'donduruldu') durumPredicate = '<span class="font-mono text-amber-400 text-xs">donduruldu? => true</span>';
+        else if (ogr.durum === 'mezun') durumPredicate = '<span class="font-mono text-purple-400 text-xs">mezun? => true</span>';
+
+        let kurallarCell = '';
+        if (kurallar.length === 0) {
+          kurallarCell = `<span class="text-slate-400 font-mono text-xs">[ ] ${ogr.durum !== 'aktif' ? '(Muaf)' : '(Sorunsuz)'}</span>`;
+        } else {
+          kurallarCell = `<div class="flex items-center gap-1.5 flex-wrap">${kurallar.map(rozetHTML).join('')}</div>`;
+        }
+
+        tr.innerHTML = `
+          <td class="p-3 font-medium text-white">${ogr.ad}</td>
+          <td class="p-3">${durumPredicate}</td>
+          <td class="p-3 font-mono">
+            <span class="${ogr.devamsizlik >= 4 ? 'text-red-400 font-bold' : (ogr.devamsizlik >= 3 ? 'text-amber-400 font-bold' : 'text-slate-200')}">${ogr.devamsizlik} gün</span>
+          </td>
+          <td class="p-3">${kurallarCell}</td>
+          <td class="p-3 text-right">
+            <button onclick="silOgrenci(${ogr.id})" class="text-red-400 hover:text-red-300 text-xs px-2.5 py-1 rounded hover:bg-red-500/20 transition">Sil</button>
+          </td>
+        `;
+        ogrenciTablosu.appendChild(tr);
+      });
+    }
+
+    window.silOgrenci = function(id) {
+      ogrenciler = ogrenciler.filter(o => o.id !== id);
+      renderTablo();
+    };
+
+    ekleBtn.addEventListener('click', () => {
+      const ad = adInput.value.trim();
+      if (!ad) return;
+      const durum = durumInput.value;
+      const devamsizlik = parseInt(devamsizlikInput.value, 10);
+      ogrenciler.push({
+        id: Date.now(),
+        ad: ad,
+        durum: durum,
+        devamsizlik: devamsizlik
+      });
+      renderTablo();
+      adInput.value = '';
+      guncelleOnizleme();
+    });
+
+    sifirlaBtn.addEventListener('click', () => {
+      ogrenciler = [
+        { id: 1, ad: "Ahmet Yılmaz", durum: "aktif", devamsizlik: 0 },
+        { id: 2, ad: "Ayşe Kaya", durum: "aktif", devamsizlik: 2 },
+        { id: 3, ad: "Mehmet Demir", durum: "aktif", devamsizlik: 3 },
+        { id: 4, ad: "Zeynep Çelik", durum: "aktif", devamsizlik: 4 },
+        { id: 5, ad: "Can Aksoy", durum: "aktif", devamsizlik: 5 },
+        { id: 6, ad: "Deniz Arda", durum: "aktif", devamsizlik: 8 },
+        { id: 7, ad: "Selin Öztürk", durum: "donduruldu", devamsizlik: 6 },
+        { id: 8, ad: "Emre Yıldız", durum: "mezun", devamsizlik: 7 }
+      ];
+      renderTablo();
+    });
+
+    adInput.addEventListener('input', guncelleOnizleme);
+    durumInput.addEventListener('change', guncelleOnizleme);
+    devamsizlikInput.addEventListener('input', guncelleOnizleme);
+
+    guncelleOnizleme();
+    renderTablo();
+  </script>
+</body>
+</html>

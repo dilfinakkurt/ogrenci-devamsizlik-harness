@@ -1,0 +1,2 @@
+#!/bin/sh
+ruby test/ogrenci_test.rb >&2 || exit 2
